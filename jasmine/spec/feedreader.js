@@ -27,7 +27,7 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* Write a test that loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
@@ -39,7 +39,7 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* Write a test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
@@ -51,23 +51,17 @@ $(function() {
         });
     });
 
-
-    /* TODO: Write a new test suite named "The menu" */
     describe('The menu', function() {
-        /* TODO: Write a test that ensures the menu element is
+        /* Write a test that ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
          * hiding/showing of the menu element.
          */
-        function isMenuHidden() {
-            return document.body.classList.contains('menu-hidden');
-        }
-
         it('is hidden by default', function() {
-            expect(isMenuHidden()).toBe(true);
+            expect(document.body.classList.contains('menu-hidden')).toBe(true);
         });
 
-         /* TODO: Write a test that ensures the menu changes
+         /* Write a test that ensures the menu changes
           * visibility when the menu icon is clicked. This test
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
@@ -76,16 +70,15 @@ $(function() {
             // Click menu button to show sidebar
             const event = new MouseEvent('click');
             document.querySelector('.menu-icon-link').dispatchEvent(event);
-            expect(isMenuHidden()).toBe(false);
+            expect(document.body.classList.contains('menu-hidden')).toBe(false);
             // Click menu button to hide sidebar
             document.querySelector('.menu-icon-link').dispatchEvent(event);
-            expect(isMenuHidden()).toBe(true);
+            expect(document.body.classList.contains('menu-hidden')).toBe(true);
         });
     });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
     describe('Initial Entries', function() {
-        /* TODO: Write a test that ensures when the loadFeed
+        /* Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
@@ -93,9 +86,9 @@ $(function() {
          */
         beforeEach(function(done) {
             // Clear the feed to ensure loadFeed gets us an entry
-            let feedNode = document.querySelector('.feed');
-            while (feedNode.firstChild) {
-                feedNode.removeChild(feedNode.firstChild);
+            let feedElem = document.querySelector('.feed');
+            while (feedElem.firstChild) {
+                feedElem.removeChild(feedElem.firstChild);
             }
             loadFeed(0, function() {
                 done();
@@ -103,31 +96,41 @@ $(function() {
         });
 
         it('loads with at least one entry', function(done) {
-            expect(document.querySelector('.feed .entry')).not.toBe(null);
+            expect(document.querySelectorAll('.feed .entry').length).toBeGreaterThan(0);
             done();
         });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
-    // describe('New Feed Selection', function() {
+    describe('New Feed Selection', function() {
 
-    //     let feedContent = [];
-    //     beforeEach(function(done) {
-    //         // Clear the feed to ensure loadFeed gets us an entry
-    //         let feedNode = document.querySelector('.feed');
-    //         while (feedNode.firstChild) {
-    //             feedContent.push({})
-    //             feedNode.removeChild(feedNode.firstChild);
-    //         }
-    //         loadFeed(0, function() {
-    //             done();
-    //         });
-    //     });
+        let firstFeedHtml = null;
+        let secondFeedHtml = null;
+        beforeEach(function(done) {
+            // Clear the feed to start over
+            let feedElem = document.querySelector('.feed');
+            while (feedElem.firstChild) {
+                feedElem.removeChild(feedElem.firstChild);
+            }
+            loadFeed(0, function() {
+                firstFeedHtml = feedElem.innerHTML;
+            });
+            loadFeed(1, function() {
+                secondFeedHtml = feedElem.innerHTML;
+                // Only call done once we finish second async call, to make sure we
+                // load both feeds before testing assertion
+                done();
+            });
+        });
 
-    //     /* TODO: Write a test that ensures when a new feed is loaded
-    //     * by the loadFeed function that the content actually changes.
-    //     * Remember, loadFeed() is asynchronous.
-    //     */
-    //    it('loads changed content', function() {});
-    // });
+        /* Write a test that ensures when a new feed is loaded
+        * by the loadFeed function that the content actually changes.
+        * Remember, loadFeed() is asynchronous.
+        */
+       it('loads changed content', function(done) {
+           expect(firstFeedHtml).not.toBe(null);
+           expect(secondFeedHtml).not.toBe(null);
+           expect(firstFeedHtml).not.toBe(secondFeedHtml);
+           done();
+       });
+    });
 }());
