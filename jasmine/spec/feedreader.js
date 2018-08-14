@@ -113,11 +113,14 @@ $(function() {
             }
             loadFeed(0, function() {
                 firstFeedHtml = feedElem.innerHTML;
+                done();
             });
+        });
+        // Adding a second beforeEach call based on this comment:
+        // https://github.com/jasmine/jasmine/issues/526#issuecomment-35794271
+        beforeEach(function(done) {
             loadFeed(1, function() {
                 secondFeedHtml = feedElem.innerHTML;
-                // Only call done once we finish second async call, to make sure we
-                // load both feeds before testing assertion
                 done();
             });
         });
