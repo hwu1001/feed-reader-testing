@@ -102,15 +102,17 @@ $(function() {
     });
 
     describe('New Feed Selection', function() {
-
+        // Test loading new feeds, to make sure that content is changing between
+        // feed loads
         let firstFeedHtml = null;
         let secondFeedHtml = null;
+        let feedElem = document.querySelector('.feed');
         beforeEach(function(done) {
             // Clear the feed to start over
-            let feedElem = document.querySelector('.feed');
             while (feedElem.firstChild) {
                 feedElem.removeChild(feedElem.firstChild);
             }
+            // Load the first feed and record the content
             loadFeed(0, function() {
                 firstFeedHtml = feedElem.innerHTML;
                 done();
@@ -119,6 +121,7 @@ $(function() {
         // Adding a second beforeEach call based on this comment:
         // https://github.com/jasmine/jasmine/issues/526#issuecomment-35794271
         beforeEach(function(done) {
+            // Load the second feed and record the content
             loadFeed(1, function() {
                 secondFeedHtml = feedElem.innerHTML;
                 done();
